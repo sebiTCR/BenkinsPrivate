@@ -1,0 +1,8 @@
+PROJECT Benkins sets the world on fire
+PROJECT_TYPE MESON
+VERSION 1.0.0
+
+VERIFY meson
+
+SETUP
+COMPILE

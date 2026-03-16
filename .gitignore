@@ -1,4 +1,4 @@
 demo/build/
 .idea/
 .venv/
-__pycache__
+__pycache__/
