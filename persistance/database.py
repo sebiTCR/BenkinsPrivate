@@ -15,7 +15,4 @@ class Database:
         self.session = Session(self.engine)
         Base.metadata.create_all(self.engine)
 
-    def test(self):
-        pass
-
 db = Database()
