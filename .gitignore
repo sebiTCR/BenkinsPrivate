@@ -3,4 +3,4 @@ demo/build/
 .venv/
 __pycache__/
 *.db
-./.env
+/.env
