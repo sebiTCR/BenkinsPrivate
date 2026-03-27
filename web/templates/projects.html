@@ -4,27 +4,7 @@
         <link rel="stylesheet" href="../static/modern.css"/>
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-        <script>
-            function get_building_code(code){
-                switch (code){
-                    case 0:
-                        return "NONE"
-                        break
 
-                    case 1:
-                        return "SUCCESS"
-                        break
-
-                    case 2:
-                        return "BUILDING"
-                        break
-
-                    case 3:
-                        return "FAILED"
-                        break
-                }
-            }
-        </script>
     </head>
     <body>
         <h1>Projects</h1>
@@ -37,7 +17,27 @@
 
                 <div class="flex flex-col">
                     <p><b>Build Status</b></p>
-                    <p>{{project.status}}</p>
+
+                    <b>
+
+                    {%if project.status == 0%}
+                    <p class="color-[#EFF8E25a]">NONE</p>
+                    {% endif %}
+
+                    {%if project.status == 1%}
+                    <p class="text-[#00A878]">SUCCESS</p>
+                    {% endif %}
+
+                    {%if project.status == 2%}
+                    <p class="text-[#B68F40]">BUILDING</p>
+                    {% endif %}
+
+                    {%if project.status == 3%}
+                    <p class="text-[#E03616]">FAILED</p>
+                    {% endif %}
+
+                    </b>
+
                 </div>
 
                 <div class="flex flex-col">
