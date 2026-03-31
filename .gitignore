@@ -4,3 +4,4 @@ demo/build/
 __pycache__/
 *.db
 /.env
+docs/

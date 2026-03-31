@@ -32,7 +32,7 @@ class Project(MappedAsDataclass, Base):
 
 class Build(MappedAsDataclass, Base):
     __tablename__ = "builds"
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(init=False, primary_key=True)
     project_id: Mapped[int] = mapped_column(ForeignKey("project.id"))
     version: Mapped[str] = mapped_column()
     file_path: Mapped[str] = mapped_column()
