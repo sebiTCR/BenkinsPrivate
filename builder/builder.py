@@ -2,52 +2,61 @@ import os.path
 import subprocess
 
 import builder.compilers as compilers
+import core.fs
 from builder.lexer import Lexer
+from core import log, fs
+from persistance.models import Project
 
 
 class Builder:
-    lexer = None
+    """
+    Builder class. Configures a project from the *project.bk* file. Contains a lexer that parses the config file, storing
+    the settings inside the database for late use.
+    """
+
     compiler: compilers.Compiler = None
+    _project: Project = None
     _initialized: bool = False
 
-    metadata: dict[str, str] = {
-        "NAME": "My Project",
-        "VERSION": "1.2.6",
-        "PROJECT_TYPE": "NONE",
-        "REPO": "https://your-repo.com/project.git",
-    }
 
-    def __init__(self, path):
+    def __init__(self, project: Project):
+        """
+        Initialize the builder in an existing repository.
+        :param path: Repository path. Make sure the path ends with "/".
+        """
+        path = project.path
+
+        if os.path.exists(path):
+            fs.clone_repo(project.repo)
         if(os.path.isfile(path + 'project.bk') == False):
-            print(f"project.bk was not found in {path + 'project.bk'}")
+            log.fatal(f"project.bk was not found in {path + 'project.bk'}")
             return
 
-        self.metadata["PATH"] = path
-        self.project_path = path
-        self.lexer = Lexer(self.metadata)
+        self._project = project
+        self.compiler = self._set_compiler(project.type, path)
+        self.compiler.setup()
 
 
     def compile(self):
         self.compiler.compile()
 
 
-    def setup(self):
-        self.lexer.parse_file()
-        self.compiler = self._set_compiler(self.lexer.get_project_type(), self.project_path)
-        self.compiler.setup()
-
-
-    """
-    Clones a github repo
-    """
     def fetch(self, repo: str):
-        subprocess.run(['git', 'clone', repo, self.project_path])
+        """
+        Checks a repo for updates
+        .. deprecated:: 1.0.0
+        :param repo: Repo URL
+        """
+        fs.clone_repo(self._project.repo, self._project.path)
 
-    """
-    Selects the right compiler based on the PROJECT_TYPE variable
-    :return Compiler object
-    """
+
     def _set_compiler(self, project_type: str,  project_path: str) -> compilers.Compiler:
+        """
+        Selects the right compiler based on the PROJECT_TYPE variable
+        :param project_type
+        :param project_path
+        :return: Compiler object
+        """
         c: compilers.Compiler = compilers.Compiler(project_path)
         project_type = project_type.upper()
 
@@ -59,4 +68,3 @@ class Builder:
                 print("Currently using the default compiler (that doesn't do any shit)")
 
         return c
-
