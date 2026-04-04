@@ -1,5 +1,10 @@
 from colored import Fore, Back, Style
 
+
+def debug(message):
+    print(f'{Fore.grey_100} {Back.grey_15} DEBUG {Style.reset} {message} ')
+
+
 def info(message):
     print(f'{Fore.grey_100}{Back.blue_1} INFO {Style.reset} {message} ')
 
