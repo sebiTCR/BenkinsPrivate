@@ -26,11 +26,8 @@ class Builder:
         """
         path = project.path
 
-        if os.path.exists(path):
-            fs.clone_repo(project.repo)
-        if(os.path.isfile(path + 'project.bk') == False):
-            log.fatal(f"project.bk was not found in {path + 'project.bk'}")
-            return
+        if(os.path.isfile(path + '/project.bk') == False):
+            log.warn(f"project.bk was not found in {path + '/project.bk'}. Using implied specs")
 
         self._project = project
         self.compiler = self._set_compiler(project.type, path)
@@ -63,8 +60,10 @@ class Builder:
         match project_type:
             case "MESON":
                 c = compilers.Meson(project_path)
+            case "KICAD":
+                c= compilers.KicadCompiler(project_path)
             case _:
-                print(f'ERR: Unknown project type "{project_type}"!')
-                print("Currently using the default compiler (that doesn't do any shit)")
-
+                log.error(f'Unknown project type "{project_type} for {self._project.name}"!')
+                log.warn("Currently using the default compiler (that doesn't do any shit)")
+        log.debug(f"Setting compiler for {self._project.name} to {project_type}", file=__file__)
         return c
