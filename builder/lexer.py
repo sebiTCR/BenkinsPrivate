@@ -11,16 +11,23 @@ class Keywords(Enum):
 
 
 class Lexer():
+    """
+    Utility for parsing 'project.bk' files.
+    Run **parse_file()** before running commands!
+
+    .. Deprecated** :: replaced with manual project selection upon creation
+    """
     data = 0
 
     def __init__(self, data):
         self.data = data
 
 
-    """
-    Reads a line and returns the according instruction
-    """
     def run_command(self, line: str):
+        """
+        Parses a BENKINS command
+        :param line: command
+        """
         keywords: list[str] = line.split(' ')
         instruction = keywords[0]
         keywords.pop(0)
