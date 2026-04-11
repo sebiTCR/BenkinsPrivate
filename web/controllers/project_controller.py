@@ -3,9 +3,11 @@ from dataclasses import asdict
 from sqlalchemy import select, delete, update
 
 from builder.builder import Builder
+from core.scheduler.tasks import CloneTask, SetupTask
 from persistance.database import db
 from persistance.models import Project, BuildStatus
 from core import log, fs
+from core.scheduler.scheduler import scheduler
 
 
 def get_projects():
@@ -49,16 +51,17 @@ def create_project(data: dict):
         return {"status": False, "message": "Project exists!"}
 
     repo_url = data["repo_url"]
+    repo_type = data["type"]
     repo_name = fs.get_repo_name(repo_url)
     project_path = f"{os.getenv('REPO_PATH')}/{repo_name}"
-    p = Project(name=data["name"], version='0', status=0, path=project_path, type="", repo=repo_url)
+    p = Project(name=data["name"], version='0', status=0, path=project_path, type=repo_type, repo=repo_url)
 
     if(not os.path.exists(project_path)):
         os.makedirs(project_path)
-    fs.clone_repo(repo_url, project_path)
 
-    b = Builder(p)
-    log.debug(f"Cloning {data['repo_url']}", file=__name__)
+    scheduler.register_task(CloneTask(p))
+    scheduler.register_task(SetupTask(p))
+    p.version = fs.get_latest_tag(project_path).name
 
     db.session.add(p)
     db.session.commit()
