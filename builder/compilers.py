@@ -44,11 +44,12 @@ class KicadCompiler(Compiler):
         self._run_drc_checks()
 
 
-    def compile(self):
+    def compile(self) -> (bool, list):
         status, violations = self._run_drc_checks()
         if status:
-           return False
+           return (status, violations)
         self._export()
+        return (status, violations)
 
 
     def _get_kicad_specific_file(self, suffix: str) -> str:

@@ -35,7 +35,7 @@ class Builder:
 
 
     def compile(self):
-        self.compiler.compile()
+        return self.compiler.compile()
 
 
     def fetch(self, repo: str):
