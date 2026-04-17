@@ -25,6 +25,14 @@ def get_build(project_id: int, project_version: str):
     return "unimplemented"
 
 
+def download_build(project_id: int, project_version: str):
+    print(project_id, project_version)
+    q = select(Build).where(Build.project_id == project_id)
+    data: Build = db.session.execute(q).first()
+    if data is None:
+        return "No build found!"
+    return send_file(data[0].file_path)
+
 
 def get_build_by_version(version: str):
     q = select(Build).where(Build.version == version)
@@ -36,11 +44,11 @@ def get_build_by_version(version: str):
     return data
 
 
-def download_build(project_id: int, version: str):
-    data: Build = get_build(project_id, version)
-    if data == None:
-        return None
-    return send_file(data.file_path)
+# def download_build(project_id: int, version: str):
+#     data: Build = get_build(project_id, version)
+#     if data == None:
+#         return None
+#     return send_file(data.file_path)
 
 
 def delete_build(project_id, project_version):
