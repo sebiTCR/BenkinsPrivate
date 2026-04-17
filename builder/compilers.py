@@ -46,8 +46,7 @@ class KicadCompiler(Compiler):
     def compile(self) -> (bool, list):
         status, violations = self._run_drc_checks()
         if status:
-           return (status, violations)
-        self._export()
+            self._export()
         return (status, violations)
 
 
