@@ -3,8 +3,7 @@ from dataclasses import asdict
 from flask import Blueprint, request, jsonify
 from persistance.database import db
 from persistance.models import Project
-
-from web.controllers.project_controller import *
+from web.controllers.project_controller import (get_projects, create_project, get_project, update_project_param, delete_project, set_project_build_status)
 
 project_bp = Blueprint('project_bp', __name__)
 

@@ -4,7 +4,6 @@ from builder.builder import Builder
 from core import log
 from core.fs import clone_repo, get_latest_tag
 from core.scheduler.task import Task
-from persistance.models import Project
 from web.controllers import project_controller
 
 
