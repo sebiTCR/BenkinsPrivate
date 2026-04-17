@@ -46,6 +46,22 @@ a:hover{
   color: #246EB9;
 }
 
+.WARNING{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #E03616;
+  border-radius: 5px;
+  padding: 1em;
+  font-family: "Jost", serif;
+  text-align: justify;
+
+}
+
+.WARNING b{
+  color: #0A0A0A;
+}
+
 .verse{
   text-align: center;
 }
