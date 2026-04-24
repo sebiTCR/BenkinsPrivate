@@ -7,7 +7,7 @@ from git import TagReference
 from builder.builder import Builder
 from core import log
 from core.fs import clone_repo, get_latest_tag
-from core.scheduler.scheduler import scheduler
+from core.scheduler.scheduler import get_scheduler
 from core.scheduler.task import Task
 from web.controllers import project_controller, build_controller
 
@@ -59,7 +59,7 @@ class BuildTask(Task):
             tag: TagReference = get_latest_tag(self._project.path)
             project_controller.set_project_build_status(self._project.id, 3)
             project_controller.set_latest_version(self._project.id, tag.name)
-            scheduler.register_task(PackageTask(self._project))
+            get_scheduler().register_task(PackageTask(self._project))
             build_controller.create_new_build(self._project, version=tag.name, path = f"{build_path}/{tag.name}.zip", logs=log)
             return
         project_controller.set_project_build_status(self._project.id, 1)

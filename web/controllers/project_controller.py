@@ -7,7 +7,7 @@ from core.scheduler.tasks import CloneTask, SetupTask, BuildTask
 from persistance.database import db
 from persistance.models import Project
 from core import log, fs
-from core.scheduler.scheduler import scheduler
+from core.scheduler.scheduler import get_scheduler
 
 
 _initialized = False
@@ -62,8 +62,8 @@ def create_project(data: dict):
     if(not os.path.exists(project_path)):
         os.makedirs(project_path)
 
-    scheduler.register_task(CloneTask(p))
-    scheduler.register_task(SetupTask(p))
+    get_scheduler().register_task(CloneTask(p))
+    get_scheduler().register_task(SetupTask(p))
 
     db.session.add(p)
     db.session.commit()
@@ -108,7 +108,7 @@ def _version_poll_worker():
             latest_version = fs.get_latest_tag(p['path'])
             if p["version"] != latest_version.name:
                 proj = get_project(p["id"])
-                scheduler.register_task(BuildTask(proj))
+                get_scheduler().register_task(BuildTask(proj))
         time.sleep(int(os.getenv("VERSION_POLL_TIME")))
 
 
@@ -117,4 +117,4 @@ def initialize():
     if _initialized:
         return
     _initialized = True
-    scheduler.register_independent_task(_version_poll_worker)
+    get_scheduler().register_independent_task(_version_poll_worker)

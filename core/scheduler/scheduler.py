@@ -18,7 +18,18 @@ class Scheduler():
     _worker_thread: Thread = None
     _periodic_tasks: list[object] = []
 
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Scheduler, cls).__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+
     def __init__(self):
+        if self._initialized:
+            return
+        self._initialized = True
         log.info("Starting Job scheduler...")
         self._worker_thread = Thread(target=self._worker, daemon=True)
         self._worker_thread.start()
@@ -47,4 +58,10 @@ class Scheduler():
             time.sleep(self.poll_time)
 
 
-scheduler: Scheduler = Scheduler()
+scheduler: Scheduler = None
+
+def get_scheduler():
+    global scheduler
+    if scheduler is None:
+        scheduler = Scheduler()
+    return scheduler
