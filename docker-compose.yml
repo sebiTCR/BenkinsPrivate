@@ -1,0 +1,27 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      - DB_URL=postgresql+psycopg2://benkins:benkins@db:5432/benkins
+      - BUILD_PATH=/app/builds
+      - REPO_PATH=/app/repos
+      - VERSION_POLL_TIME=60
+    volumes:
+      - /tmp/benkins/builds:/app/builds
+      - /tmp/benkins/repos:/app/repos
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=benkins
+      - POSTGRES_PASSWORD=benkins
+      - POSTGRES_DB=benkins
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
