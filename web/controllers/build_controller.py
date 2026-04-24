@@ -1,5 +1,4 @@
 from flask import send_file
-from pygments.lexers import data
 from sqlalchemy import select, delete
 
 from persistance.models import Build, Project, Log

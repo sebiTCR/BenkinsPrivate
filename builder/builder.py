@@ -2,8 +2,6 @@ import os.path
 import subprocess
 
 import builder.compilers as compilers
-import core.fs
-from builder.lexer import Lexer
 from core import log, fs
 from persistance.models import Project
 
