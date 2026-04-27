@@ -22,4 +22,4 @@ ARG VERSION_POLL_TIME
 
 EXPOSE 5000
 
-CMD ["flask", "run"]
+CMD ["python", "main.py"]
